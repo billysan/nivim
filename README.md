@@ -9,3 +9,4 @@ you kinda need ripgrep
 
 you should have your nvim binary available in PATH alongside lazygit with init.lua as a configuration
 
+
