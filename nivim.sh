@@ -42,6 +42,12 @@ if [ $? -ne 0 ]; then
 	echo "export PATH=\$PATH:$dest_dir/squashfs-root/usr/bin" >> ~/.bashrc
 fi
 
+grep nivim ~/.bashrc &>/dev/null
+if [ $? -ne 0 ]; then
+	echo adding nivim alias to .bashrc...
+	echo "alias nivim=nvim" >> ~/.bashrc
+fi
+
 pip freeze | grep pyright== &> /dev/null || pip install pyright
 pip freeze | grep black== &> /dev/null || pip install black
 

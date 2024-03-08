@@ -403,9 +403,9 @@ dashboard.section.header.val = {
 
 -- Set menu
 dashboard.section.buttons.val = {
-    dashboard.button( "<C-n>", "🌿 > Open tree" , toggle_nvim_tree),
-    dashboard.button( "<leader>fa", "🔎  > Find file", builtin.find_files),
-    dashboard.button( "r", "🗃️  > Recent"   , ":Telescope oldfiles<CR>"),
-    dashboard.button( "q", "❌ > Quit NVIM", ":qa<CR>"),
+    dashboard.button( "<C-n>", "🌿 > open tree" , toggle_nvim_tree),
+    dashboard.button( "<leader>fa", "🔎 > find file", builtin.find_files),
+    dashboard.button( "r", "🗃️ > recent"   , ":Telescope oldfiles<CR>"),
+    dashboard.button( "q", "❌ > quit nvim", ":qa<CR>"),
 }
 
