@@ -15,6 +15,7 @@ dest_dir=$HOME/.local/bin
 
 mkdir -p $HOME/.config/nvim
 cp init.lua $HOME/.config/nvim
+cp cheatsheet.md $HOME/.config/nvim
 
 chmod u+x lazygit
 chmod u+x lazydocker
