@@ -2,6 +2,7 @@
 ---
 --- Global
 ---
+
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
@@ -20,10 +21,19 @@ vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-vim.keymap.set('n', '<C-s>', ':w<CR>', { desc = 'Save buffer' })
-
 local local_keymap_options = { noremap = true, silent = true }
+local is_cheatsheet_open = false
+
+function esc_keymap()
+  if is_cheatsheet_open == true then
+    close_cheatsheet()
+  else
+    vim.api.nvim_exec('nohlsearch', true)
+  end
+end
+
+vim.keymap.set('n', '<Esc>', esc_keymap, local_keymap_options)
+vim.keymap.set('n', '<C-s>', ':w<CR>', { desc = 'Save buffer' })
 
 --- ######################################################################
 --- Lazy
@@ -401,11 +411,56 @@ dashboard.section.header.val = {
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
 }
 
--- Set menu
 dashboard.section.buttons.val = {
     dashboard.button( "<C-n>", "🌿 > open tree" , toggle_nvim_tree),
-    dashboard.button( "<leader>fa", "🔎 > find file", builtin.find_files),
+    dashboard.button( "<space>fa", "🔎 > find file", builtin.find_files),
     dashboard.button( "r", "🗃️ > recent"   , ":Telescope oldfiles<CR>"),
+    dashboard.button( '<space>t', '📜 cheatsheet', show_cheatsheet),
     dashboard.button( "q", "❌ > quit nvim", ":qa<CR>"),
 }
+
+
+---
+--- cheatsheet
+---
+local cheatsheet_window = nil
+
+function show_cheatsheet()
+  local Popup = require("nui.popup")
+  local event = require("nui.utils.autocmd").event
+
+  cheatsheet_window = Popup({
+    enter = false,
+    focusable = false,
+    border = {
+      style = "rounded",
+    },
+    position = "50%",
+    size = {
+      width = "80%",
+      height = "60%",
+    },
+  })
+
+  -- mount/open the component
+  cheatsheet_window:mount()
+  is_cheatsheet_open = true
+
+  -- unmount component when cursor leaves buffer
+  cheatsheet_window:on(event.BufLeave, function()
+    cheatsheet_window:unmount()
+  end)
+
+  local file_contents = vim.fn.readfile('cheatsheet.md')
+  -- set content
+  vim.api.nvim_buf_set_lines(cheatsheet_window.bufnr, 0, 1, false, file_contents)
+  return cheatsheet_window
+end
+
+function close_cheatsheet()
+  cheatsheet_window:unmount()
+  is_cheatsheet_open = false
+end
+
+vim.keymap.set('n', '<leader>t', show_cheatsheet, {})
 
