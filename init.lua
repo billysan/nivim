@@ -412,10 +412,10 @@ dashboard.section.header.val = {
 }
 
 dashboard.section.buttons.val = {
-    dashboard.button( "<C-n>", "🌿 > open tree" , toggle_nvim_tree),
+    dashboard.button( "<ctrl> n", "🌿 > open tree" , toggle_nvim_tree),
     dashboard.button( "<space>fa", "🔎 > find file", builtin.find_files),
     dashboard.button( "r", "🗃️ > recent"   , ":Telescope oldfiles<CR>"),
-    dashboard.button( '<space>t', '📜 cheatsheet', show_cheatsheet),
+    dashboard.button( '<space>t', '📜 > cheatsheet', show_cheatsheet),
     dashboard.button( "q", "❌ > quit nvim", ":qa<CR>"),
 }
 
