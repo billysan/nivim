@@ -450,8 +450,8 @@ function show_cheatsheet()
   cheatsheet_window:on(event.BufLeave, function()
     cheatsheet_window:unmount()
   end)
-
-  local file_contents = vim.fn.readfile('cheatsheet.md')
+  local cheatsheet_path = vim.fn.stdpath('config') .. '/cheatsheet.md'
+  local file_contents = vim.fn.readfile(cheatsheet_path)
   -- set content
   vim.api.nvim_buf_set_lines(cheatsheet_window.bufnr, 0, 1, false, file_contents)
   return cheatsheet_window
