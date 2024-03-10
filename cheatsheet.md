@@ -18,4 +18,3 @@ a ............ create file (in tree)
 
 
 <esc> to close this window
-
