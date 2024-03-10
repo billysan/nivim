@@ -135,7 +135,8 @@ local plugins = {
     config = function ()
         require'alpha'.setup(require'alpha.themes.dashboard'.config)
     end
-  };
+  },
+  { "j-hui/fidget.nvim" },
 }
 
 local opts = {}
@@ -500,4 +501,10 @@ function close_cheatsheet()
 end
 
 vim.keymap.set('n', '<leader>t', show_cheatsheet, {})
+
+
+---
+--- fidget
+---
+require('fidget').setup({})
 
