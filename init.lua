@@ -156,7 +156,22 @@ require('ayu').setup({
     CursorColumn = { bg = "None" },
     WhichKeyFloat = { bg = "None" },
     VertSplit = { bg = "None" },
-    Comment = { fg = '#00FF00' },
+    Comment = {
+      fg = "#10FF00",
+      italic = true,
+    },
+    Statement = {
+      fg = "orange",
+    },
+    Exception = {
+      fg = "orange"
+    },
+    Repeat = {
+      fg = "orange"
+    },
+    Operator = {
+      fg = "purple"
+    },
   },
 })
 vim.cmd("colorscheme ayu-dark")
