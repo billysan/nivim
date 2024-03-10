@@ -177,7 +177,11 @@ require("telescope").load_extension("ui-select")
 ---
 --- nvim-tree
 ---
-require("nvim-tree").setup({})
+require("nvim-tree").setup({
+  view = {
+    width = "30%"
+  }
+})
 
 function toggle_nvim_tree()
 
