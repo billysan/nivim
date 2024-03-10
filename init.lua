@@ -2,7 +2,6 @@
 ---
 --- Global
 ---
-
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
@@ -26,12 +25,19 @@ local local_keymap_options = { noremap = true, silent = true }
 local is_cheatsheet_open = false
 
 function esc_keymap()
+
   if is_cheatsheet_open == true then
     close_cheatsheet()
-  else
-    vim.api.nvim_exec('nohlsearch', true)
+    return
   end
-end
+
+  if string.find(vim.api.nvim_buf_get_name(0), "fugitiveblame") then
+    vim.api.nvim_command("q")
+    return
+  end
+
+  vim.api.nvim_exec('nohlsearch', true)
+  end
 
 vim.keymap.set('n', '<Esc>', esc_keymap, local_keymap_options)
 vim.keymap.set('n', '<C-s>', ':w<CR>', { desc = 'Save buffer' })
@@ -394,9 +400,7 @@ require('todo-comments').setup({
 ---
 function toggle_git_blame()
 
-    local current_buffer_name = vim.api.nvim_buf_get_name(0)
-
-    if string.find(current_buffer_name, "fugitiveblame") then
+    if string.find(vim.api.nvim_buf_get_name(0), "fugitiveblame") then
         vim.api.nvim_command("q")
     else
         vim.api.nvim_command("Git blame")
