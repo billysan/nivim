@@ -20,6 +20,7 @@ vim.opt.hlsearch = true
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
+vim.opt.confirm = true
 
 local local_keymap_options = { noremap = true, silent = true }
 local is_cheatsheet_open = false
@@ -255,7 +256,20 @@ require('barbar').setup({
         NvimTree = true,
 	},
 })
-vim.api.nvim_set_keymap('n', '<leader>x', ':BufferClose<CR>', local_keymap_options)
+
+function confirm_buffer_changes()
+  if vim.api.nvim_buf_get_option(0, 'modified') then
+    local choice = vim.fn.input('Buffer has unsaved changes. Save changes [y/n/c]: ')
+    if choice == 'y' then
+      vim.cmd('w')
+    elseif choice == 'c' then
+      return
+    end
+  end
+  vim.cmd('BufferClose!')
+end
+
+vim.keymap.set('n', '<leader>x', confirm_buffer_changes)
 vim.api.nvim_set_keymap('n', '<C-Right>', ':BufferNext<CR>', local_keymap_options)
 vim.api.nvim_set_keymap('n', '<C-Left>', ':BufferPrevious<CR>', local_keymap_options)
 
