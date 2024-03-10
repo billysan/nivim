@@ -236,7 +236,13 @@ config.setup({
 ---
 --- lualine
 ---
-require('lualine').setup()
+require('lualine').setup({
+  sections = {
+    lualine_c = {
+      'lsp_progress'
+    }
+	}
+})
 
 
 --
