@@ -1,10 +1,14 @@
 ---
 --- Global
 ---
+-- Set the mapleader and maplocalleader to space
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+
+-- Enable Nerd Font support
 vim.g.have_nerd_font = true
 
+-- Set various options using vim.opt
 vim.opt.number = true
 vim.opt.mouse = "a"
 vim.opt.showmode = false
@@ -23,20 +27,25 @@ vim.opt.confirm = true
 local local_keymap_options = { noremap = true, silent = true }
 local is_cheatsheet_open = false
 
+-- Define the function to handle ESC key mapping
 function esc_keymap()
+	-- Check if cheatsheet is open, if so close it
 	if is_cheatsheet_open == true then
 		close_cheatsheet()
 		return
 	end
 
+	-- Check if the current buffer is a fugitiveblame buffer, if so close it with :q
 	if string.find(vim.api.nvim_buf_get_name(0), "fugitiveblame") then
 		vim.api.nvim_command("q")
 		return
 	end
 
+	-- Clear the search highlight
 	vim.api.nvim_exec("nohlsearch", true)
 end
 
+-- Set key mappings for saving the buffer in normal mode and insert mode
 vim.keymap.set("n", "<C-s>", ":w<CR>", { desc = "Save buffer" })
 vim.keymap.set("i", "<C-s>", "<ESC>:w<CR>a", { desc = "Save buffer" })
 
@@ -209,16 +218,20 @@ require("nvim-tree").setup({
 	},
 })
 
+-- Define a function named toggle_nvim_tree
 function toggle_nvim_tree()
+	-- Get the name of the current buffer
 	local current_buffer_name = vim.api.nvim_buf_get_name(0)
 
+	-- Check if the current buffer name contains "NvimTree"
 	if string.find(current_buffer_name, "NvimTree") then
+		-- If "NvimTree" is in the buffer name, move focus to the right window
 		vim.api.nvim_command("wincmd l")
 	else
+		-- If "NvimTree" is not in the buffer name, focus on the NvimTree window
 		vim.api.nvim_command("NvimTreeFocus")
 	end
 end
-
 vim.keymap.set("n", "<C-n>", ":NvimTreeToggle<CR>", local_keymap_options)
 vim.keymap.set("n", "<leader>e", toggle_nvim_tree, local_keymap_options)
 vim.keymap.set("n", "<leader>tk", ":NvimTreeCollapse<CR>", local_keymap_options)
@@ -291,24 +304,25 @@ require("barbar").setup({
 	},
 })
 
-
+-- Function to confirm and handle buffer changes before closing the buffer.
 local function confirm_buffer_changes()
+	-- Check if the current buffer has been modified
+	if vim.api.nvim_buf_get_option(0, "modified") then
+		-- Define the options for the user prompt
+		local options = { "&Yes", "&No", "&Cancel" }
+		local message = "Save file?"
+		-- Show a confirmation dialog to the user
+		local choice = vim.fn.confirm(message, table.concat(options, "\n"), 0)
 
-    if vim.api.nvim_buf_get_option(0, "modified") then
-
-        local options = {"&Yes", "&No", "&Cancel"}
-        local message = "Save file?"
-        local choice = vim.fn.confirm(message, table.concat(options, "\n"), 0)
-
-        if choice == 1 then
-            vim.cmd('w')
-        elseif choice == 3 then
-            return
-        end
-    end
-    vim.cmd("BufferClose!")
+		-- Handle user choice
+		if choice == 1 then
+			vim.cmd("w") -- Save the buffer
+		elseif choice == 3 then
+			return -- Cancel buffer closing
+		end
+	end
+	vim.cmd("BufferClose!") -- Close the buffer
 end
-
 
 vim.keymap.set("n", "<leader>x", confirm_buffer_changes)
 vim.api.nvim_set_keymap("n", "<C-Right>", ":BufferNext<CR>", local_keymap_options)
@@ -424,14 +438,17 @@ require("todo-comments").setup({
 ---
 --- fugitive
 ---
+-- Function to toggle Git blame view in Neovim
 function toggle_git_blame()
+	-- Check if current buffer is already in fugitiveblame view
 	if string.find(vim.api.nvim_buf_get_name(0), "fugitiveblame") then
+		-- Close the buffer if already in fugitiveblame view
 		vim.api.nvim_command("q")
 	else
+		-- Open Git blame view if not already in fugitiveblame view
 		vim.api.nvim_command("Git blame")
 	end
 end
-
 vim.keymap.set("n", "<leader>gb", toggle_git_blame, local_keymap_options)
 
 ---
@@ -535,8 +552,6 @@ end
 
 vim.keymap.set("n", "<leader>f", format_buffer, local_keymap_options)
 
-
 ---
 --- codegpt
 ---
-

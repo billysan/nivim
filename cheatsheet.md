@@ -17,4 +17,6 @@ a ............ create file (in tree)
 <space> fz ... live grep file
 
 
-<esc> to close this window
+
+
+                                    <esc> to close this window
