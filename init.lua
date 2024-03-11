@@ -46,6 +46,7 @@ function esc_keymap()
 end
 
 -- Set key mappings for saving the buffer in normal mode and insert mode
+vim.keymap.set('n', '<Esc>', esc_keymap, local_keymap_options)
 vim.keymap.set("n", "<C-s>", ":w<CR>", { desc = "Save buffer" })
 vim.keymap.set("i", "<C-s>", "<ESC>:w<CR>a", { desc = "Save buffer" })
 
