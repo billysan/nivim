@@ -136,6 +136,13 @@ local plugins = {
 	},
 	{ "stevearc/conform.nvim" },
 	{ "zapling/mason-conform.nvim" },
+	{
+		"dpayne/CodeGPT.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"MunifTanjim/nui.nvim",
+		},
+	},
 }
 
 local opts = {}
@@ -520,3 +527,8 @@ function format_buffer()
 end
 
 vim.keymap.set("n", "<leader>f", format_buffer, local_keymap_options)
+
+
+---
+--- codegpt
+---
