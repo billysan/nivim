@@ -519,11 +519,11 @@ function show_cheatsheet()
 	return cheatsheet_window
 end
 
+-- Function to close the cheatsheet window
 function close_cheatsheet()
-	cheatsheet_window:unmount()
-	is_cheatsheet_open = false
+	cheatsheet_window:unmount() -- Unmount the cheatsheet window
+	is_cheatsheet_open = false -- Update the flag to indicate cheatsheet is closed
 end
-
 vim.keymap.set("n", "<leader>t", show_cheatsheet, {})
 
 ---
@@ -542,12 +542,14 @@ conform.setup({
 
 require("mason-conform").setup({})
 
+-- Function to format a buffer
 function format_buffer()
-	conform.format({
-		lsp_failback = true,
-		async = false,
-		timeout_ms = 500,
-	})
+    -- Call the 'conform.format' function with specific options
+    conform.format({
+        lsp_failback = true,
+        async = false,
+        timeout_ms = 500,
+    })
 end
 
 vim.keymap.set("n", "<leader>f", format_buffer, local_keymap_options)
