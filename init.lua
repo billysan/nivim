@@ -37,8 +37,8 @@ function esc_keymap()
 	vim.api.nvim_exec("nohlsearch", true)
 end
 
-vim.keymap.set("n", "<Esc>", esc_keymap, local_keymap_options)
 vim.keymap.set("n", "<C-s>", ":w<CR>", { desc = "Save buffer" })
+vim.keymap.set("i", "<C-s>", "<ESC>:w<CR>a", { desc = "Save buffer" })
 
 --- ######################################################################
 --- Lazy
@@ -291,17 +291,24 @@ require("barbar").setup({
 	},
 })
 
-function confirm_buffer_changes()
-	if vim.api.nvim_buf_get_option(0, "modified") then
-		local choice = vim.fn.input("Buffer has unsaved changes. Save changes [y/n/c]: ")
-		if choice == "y" then
-			vim.cmd("w")
-		elseif choice == "c" then
-			return
-		end
-	end
-	vim.cmd("BufferClose!")
+
+local function confirm_buffer_changes()
+
+    if vim.api.nvim_buf_get_option(0, "modified") then
+
+        local options = {"&Yes", "&No", "&Cancel"}
+        local message = "Save file?"
+        local choice = vim.fn.confirm(message, table.concat(options, "\n"), 0)
+
+        if choice == 1 then
+            vim.cmd('w')
+        elseif choice == 3 then
+            return
+        end
+    end
+    vim.cmd("BufferClose!")
 end
+
 
 vim.keymap.set("n", "<leader>x", confirm_buffer_changes)
 vim.api.nvim_set_keymap("n", "<C-Right>", ":BufferNext<CR>", local_keymap_options)
@@ -532,3 +539,4 @@ vim.keymap.set("n", "<leader>f", format_buffer, local_keymap_options)
 ---
 --- codegpt
 ---
+
