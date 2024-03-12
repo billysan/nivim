@@ -593,13 +593,13 @@ vim.g["codegpt_commands_defaults"] = {
 function codegpt_question()
     move_right_if_in_tree()
     local question = vim.fn.input("Ask GPT: ")
-    vim.api.nvim_command("Chat" .. " " .. question)
+    vim.api.nvim_command("Chat chat " .. question)
 end
 
 function codegpt_instruct_edit()
     move_right_if_in_tree()
     local instruction = vim.fn.input("Instruct GPT: ")
-    vim.api.nvim_command("Chat code_edit" .. instruction)
+    vim.api.nvim_command("Chat code_edit " .. instruction)
 end
 
 vim.keymap.set('n','<leader>tq', codegpt_question, local_keymap_options)
