@@ -548,8 +548,8 @@ function format_buffer()
     -- Call the 'conform.format' function with specific options
     conform.format({
         lsp_failback = true,
-        async = false,
-        timeout_ms = 500,
+        async = true,
+        timeout_ms = 1000,
     })
 end
 
@@ -558,3 +558,16 @@ vim.keymap.set("n", "<leader>f", format_buffer, local_keymap_options)
 ---
 --- codegpt
 ---
+vim.g["codegpt_commands_defaults"] = {
+    ["chat"] = {
+        model = "gpt-4",
+        system_message_template = "You are a general assistant to a software developer.",
+        user_message_template = "{{command_args}}",
+        callback_type = "code_popup"
+    },
+    ["code_edit"] = {
+        model = "gpt-4",
+        user_message_template = "I have the following {{language}} code: ```{{filetype}}\n{{text_selection}}```\n{{command_args}}. {{language_instructions}} Only return the code snippet and nothing else.",
+        callback_type = "code_popup"
+    }
+}
