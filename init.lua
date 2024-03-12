@@ -27,6 +27,14 @@ vim.opt.confirm = true
 local local_keymap_options = { noremap = true, silent = true }
 local is_cheatsheet_open = false
 
+function move_right_if_in_tree()
+	-- Check if the current buffer name contains "NvimTree"
+	if string.find(vim.api.nvim_buf_get_name(0), "NvimTree") then
+		-- If "NvimTree" is in the buffer name, move focus to the right window
+		vim.api.nvim_command("wincmd l")
+	end
+end
+
 -- Define the function to handle ESC key mapping
 function esc_keymap()
 	-- Check if cheatsheet is open, if so close it
@@ -46,7 +54,7 @@ function esc_keymap()
 end
 
 -- Set key mappings for saving the buffer in normal mode and insert mode
-vim.keymap.set('n', '<Esc>', esc_keymap, local_keymap_options)
+vim.keymap.set("n", "<Esc>", esc_keymap, local_keymap_options)
 vim.keymap.set("n", "<C-s>", ":w<CR>", { desc = "Save buffer" })
 vim.keymap.set("i", "<C-s>", "<ESC>:w<CR>a", { desc = "Save buffer" })
 
@@ -374,7 +382,13 @@ vim.keymap.set("n", "<A-i>", ":FloatermToggle<CR>", local_keymap_options)
 --- lazydocker
 ---
 require("lazydocker").setup({})
-vim.keymap.set("n", "<leader>dk", "<cmd>LazyDocker<CR>", local_keymap_options)
+
+function open_lazydocker()
+	move_right_if_in_tree()
+	vim.cmd("LazyDocker")
+end
+
+vim.keymap.set("n", "<leader>dk", open_lazydocker, local_keymap_options)
 
 ---
 --- noice, notify
@@ -446,6 +460,7 @@ function toggle_git_blame()
 		-- Close the buffer if already in fugitiveblame view
 		vim.api.nvim_command("q")
 	else
+		move_right_if_in_tree()
 		-- Open Git blame view if not already in fugitiveblame view
 		vim.api.nvim_command("Git blame")
 	end
@@ -479,7 +494,7 @@ dashboard.section.buttons.val = {
 	dashboard.button("<ctrl>n", "🌿 > open tree", toggle_nvim_tree),
 	dashboard.button("<space>fa", "🔎 > find file", builtin.find_files),
 	dashboard.button("r", "🗃️ > recent", ":Telescope oldfiles<CR>"),
-	dashboard.button("<space>t", "📜 > cheatsheet", show_cheatsheet),
+	dashboard.button("<space>th", "📜 > cheatsheet", show_cheatsheet),
 	dashboard.button("q", "❌ > quit nvim", ":qa<CR>"),
 }
 
@@ -489,6 +504,8 @@ dashboard.section.buttons.val = {
 local cheatsheet_window = nil
 
 function show_cheatsheet()
+	move_right_if_in_tree()
+
 	local Popup = require("nui.popup")
 	local event = require("nui.utils.autocmd").event
 
@@ -525,7 +542,7 @@ function close_cheatsheet()
 	cheatsheet_window:unmount() -- Unmount the cheatsheet window
 	is_cheatsheet_open = false -- Update the flag to indicate cheatsheet is closed
 end
-vim.keymap.set("n", "<leader>t", show_cheatsheet, {})
+vim.keymap.set("n", "<leader>th", show_cheatsheet, {})
 
 ---
 --- conform
@@ -545,12 +562,13 @@ require("mason-conform").setup({})
 
 -- Function to format a buffer
 function format_buffer()
-    -- Call the 'conform.format' function with specific options
-    conform.format({
-        lsp_failback = true,
-        async = true,
-        timeout_ms = 1000,
-    })
+	move_right_if_in_tree()
+	-- Call the 'conform.format' function with specific options
+	conform.format({
+		lsp_failback = true,
+		async = true,
+		timeout_ms = 1000,
+	})
 end
 
 vim.keymap.set("n", "<leader>f", format_buffer, local_keymap_options)
@@ -559,15 +577,31 @@ vim.keymap.set("n", "<leader>f", format_buffer, local_keymap_options)
 --- codegpt
 ---
 vim.g["codegpt_commands_defaults"] = {
-    ["chat"] = {
-        model = "gpt-4",
-        system_message_template = "You are a general assistant to a software developer.",
-        user_message_template = "{{command_args}}",
-        callback_type = "code_popup"
-    },
-    ["code_edit"] = {
-        model = "gpt-4",
-        user_message_template = "I have the following {{language}} code: ```{{filetype}}\n{{text_selection}}```\n{{command_args}}. {{language_instructions}} Only return the code snippet and nothing else.",
-        callback_type = "code_popup"
-    }
+	["chat"] = {
+		model = "gpt-4",
+		system_message_template = "You are a general assistant to a software developer.",
+		user_message_template = "{{command_args}}",
+		callback_type = "code_popup",
+	},
+	["code_edit"] = {
+		model = "gpt-4",
+		user_message_template = "I have the following {{language}} code: ```{{filetype}}\n{{text_selection}}```\n{{command_args}}. {{language_instructions}} Only return the code snippet and nothing else.",
+		callback_type = "code_popup",
+	},
 }
+
+function codegpt_question()
+    move_right_if_in_tree()
+    local question = vim.fn.input("Ask GPT: ")
+    vim.api.nvim_command("Chat" .. " " .. question)
+end
+
+function codegpt_instruct_edit()
+    move_right_if_in_tree()
+    local instruction = vim.fn.input("Instruct GPT: ")
+    vim.api.nvim_command("Chat code_edit" .. instruction)
+end
+
+vim.keymap.set('n','<leader>tq', codegpt_question, local_keymap_options)
+vim.keymap.set('v', '<leader>ti', codegpt_instruct_edit, local_keymap_options)
+
