@@ -51,5 +51,6 @@ fi
 
 pip freeze | grep pyright== &> /dev/null || pip install pyright
 pip freeze | grep black== &> /dev/null || pip install black
+pip freeze | grep djlint== &> /dev/null || pip install djlint
 
 echo done

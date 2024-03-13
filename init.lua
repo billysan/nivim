@@ -553,7 +553,7 @@ conform.setup({
 		lua = { "stylua" },
 		python = { "black" },
 		json = { "prettier" },
-		html = { "prettier" },
+		html = { "djlint" },
 		javascript = { "prettier" },
 	},
 })
