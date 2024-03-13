@@ -31,22 +31,30 @@ if [ ! -d "$dest_dir/squashfs-root" ]; then
 	mv squashfs-root $dest_dir
 fi
 
-grep -i $dest_dir ~/.bashrc &>/dev/null
+# check if the shell is zsh or bash
+if [ $SHELL = "/bin/zsh" ]
+then
+    rc_file=~/.zshrc
+else
+    rc_file=~/.bashrc
+fi
+
+grep -i $dest_dir $rc_file &>/dev/null
 if [ $? -ne 0 ]; then
 	echo adding $dest_dir to .bashrc...
-	echo "export PATH=\$PATH:$dest_dir" >> ~/.bashrc
+	echo "export PATH=\$PATH:$dest_dir" >> $rc_file
 fi
 
-grep -i $dest_dir/squashfs-root/usr/bin ~/.bashrc &>/dev/null
+grep -i $dest_dir/squashfs-root/usr/bin $rc_file &>/dev/null
 if [ $? -ne 0 ]; then
 	echo adding squashfs to .bashrc...
-	echo "export PATH=\$PATH:$dest_dir/squashfs-root/usr/bin" >> ~/.bashrc
+	echo "export PATH=\$PATH:$dest_dir/squashfs-root/usr/bin" >> $rc_file
 fi
 
-grep nivim ~/.bashrc &>/dev/null
+grep nivim $rc_file &>/dev/null
 if [ $? -ne 0 ]; then
 	echo adding nivim alias to .bashrc...
-	echo "alias nivim=nvim" >> ~/.bashrc
+	echo "alias nivim=nvim" >> $rc_file
 fi
 
 pip freeze | grep pyright== &> /dev/null || pip install pyright
