@@ -1,13 +1,24 @@
 #!/bin/bash
 
-echo -n looking for ripgrep... 
-which rg &>/dev/null
-if [ $? -ne 0 ]; then
-  echo
-	echo please install ripgrep somehow
-  exit 1
+# List of binaries
+binaries=("rg" "make")
+is_continue=true
+
+# Loop through the list
+for binary in "${binaries[@]}"
+do
+    # Check if binary is installed
+    if ! which $binary &> /dev/null
+    then
+        echo "$binary is not installed."
+        is_continue=false
+    fi
+done
+
+if [ "$is_continue" = false ]; then
+    echo "please install missing binaries"
+    exit 1
 fi
-echo found it
 
 echo starting...
 
