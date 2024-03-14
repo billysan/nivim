@@ -11,9 +11,9 @@
    <alt> x ...... ❌ close tab                                ra ............ 🖋️ rename code
                                                               gb ............ 👀 toggle git blame
 
-🔎 lookup
-   <space> fa ... 📁 file search
-   <space> fw ... 📑 live grep project
+🔎 lookup                                                   🤖 gpt
+   <space> fa ... 📁 file search                               <leader> tq .. 💭 ask a question   
+   <space> fw ... 📑 live grep project                         <leader> ti .. ✏️ instruct on selection 
    <space> fz ... 📄 live grep file
 
 
