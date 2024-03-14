@@ -225,8 +225,10 @@ require("nvim-tree").setup({
 	view = {
 		width = "30%",
 	},
+    update_focused_file = {
+        enable = true
+    }
 })
-
 -- Define a function named toggle_nvim_tree
 function toggle_nvim_tree()
 	-- Get the name of the current buffer
