@@ -161,10 +161,10 @@ local plugins = {
 			"MunifTanjim/nui.nvim",
 		},
 	},
-    {
-       'nvim-telescope/telescope-fzf-native.nvim',
-        build = 'make'
-    },
+	{
+		"nvim-telescope/telescope-fzf-native.nvim",
+		build = "make",
+	},
 }
 
 local opts = {}
@@ -221,7 +221,7 @@ require("telescope").setup({
 	},
 })
 require("telescope").load_extension("ui-select")
-require('telescope').load_extension('fzf')
+require("telescope").load_extension("fzf")
 
 ---
 --- nvim-tree
@@ -230,9 +230,9 @@ require("nvim-tree").setup({
 	view = {
 		width = "30%",
 	},
-    update_focused_file = {
-        enable = true
-    }
+	update_focused_file = {
+		enable = true,
+	},
 })
 -- Define a function named toggle_nvim_tree
 function toggle_nvim_tree()
@@ -598,17 +598,16 @@ vim.g["codegpt_commands_defaults"] = {
 }
 
 function codegpt_question()
-    move_right_if_in_tree()
-    local question = vim.fn.input("Ask GPT: ")
-    vim.api.nvim_command("Chat chat " .. question)
+	move_right_if_in_tree()
+	local question = vim.fn.input("Ask GPT: ")
+	vim.api.nvim_command("Chat chat " .. question)
 end
 
 function codegpt_instruct_edit()
-    move_right_if_in_tree()
-    local instruction = vim.fn.input("Instruct GPT: ")
-    vim.api.nvim_command("Chat code_edit " .. instruction)
+	move_right_if_in_tree()
+	local instruction = vim.fn.input("Instruct GPT: ")
+	vim.api.nvim_command("Chat code_edit " .. instruction)
 end
 
-vim.keymap.set('n','<leader>tq', codegpt_question, local_keymap_options)
-vim.keymap.set('v', '<leader>ti', codegpt_instruct_edit, local_keymap_options)
-
+vim.keymap.set("n", "<leader>tq", codegpt_question, local_keymap_options)
+vim.keymap.set("v", "<leader>ti", codegpt_instruct_edit, local_keymap_options)
