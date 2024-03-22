@@ -222,6 +222,7 @@ require("telescope").setup({
 })
 require("telescope").load_extension("ui-select")
 require("telescope").load_extension("fzf")
+vim.keymap.set("n", "<leader>fr", ":Telescope oldfiles<CR>", {})
 
 ---
 --- nvim-tree
