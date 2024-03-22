@@ -560,7 +560,7 @@ conform.setup({
 		lua = { "stylua" },
 		python = { "black" },
 		json = { "prettier" },
-		html = { "djlint" },
+		html = { "prettier" },
 		javascript = { "prettier" },
 	},
 })
@@ -578,7 +578,7 @@ function format_buffer()
 	})
 end
 
-vim.keymap.set("n", "<leader>f", format_buffer, local_keymap_options)
+vim.keymap.set("n", "<leader>fo", format_buffer, local_keymap_options)
 
 ---
 --- codegpt
