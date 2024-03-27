@@ -1,22 +1,41 @@
 
-🌲 tree view                                               💤 lazies
-   <ctrl> n ..... 📂 toggle tree view                         <space> gg .... 🎋 git
-   <space> e .... 🔬 toggle focus tree view                   <space> dk .... 🐳 lazydocker
+🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷
+🦷                                              🦷
+🦷                 cheatsheet                   🦷
+🦷                                              🦷
+🦷             🔃 scroll for more               🦷
+🦷             ❌ close with <esc>              🦷
+🦷                                              🦷
+🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷
+
+🌲 tree view
+   <ctrl> n ..... 📂 toggle tree view
+   <space> e .... 🔬 toggle focus tree view
    <space> tk ... 🌂 collapse tree view
    a ............ ✨ create file (in tree)
 
-📖 tabs                                                     ⚒️ coding
-   <ctrl> right . 👉 next tab                                 gd ............ 🛩️ go to defintion
-   <ctrl> left .. 👈 previous tab                             gr ............ 📜 show references
-   <alt> x ...... ❌ close tab                                ra ............ 🖋️ rename code
-                                                              gb ............ 👀 toggle git blame
+📖 tabs
+   <ctrl> right . 👉 next tab
+   <ctrl> left .. 👈 previous tab
+   <alt> x ...... ❌ close tab
 
-🔎 lookup                                                   🤖 gpt
-   <space> fa ... 📁 file search                               <leader> tq .. 💭 ask a question   
-   <space> fw ... 📑 live grep project                         <leader> ti .. ✏️ instruct on selection 
+🔎 lookup
+   <space> fa ... 📁 file search
+   <space> fw ... 📑 live grep project
    <space> fz ... 📄 live grep file
+   <space> fr ... 🗃️ recent files
 
+⚒️  coding
+   gd ............ 🛩️ go to defintion
+   gr ............ 📜 show references
+   ra ............ 🖋️ rename code
+   gb ............ 👀 toggle git blame
+   <leader> fo ... 💅 format code
 
+💤 lazies
+   <space> gg .... 🎋 git
+   <space> dk .... 🐳 lazydocker
 
-
-                                    <esc> to close this window 
+🤖 gpt
+   <leader> tq .. 💭 ask a question
+   <leader> ti .. ✏️ instruct on selection 

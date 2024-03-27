@@ -405,7 +405,7 @@ require("notify").setup({
 	background_colour = "#000000",
 	render = "wrapped-compact",
 	stages = "static",
-	top_down = false,
+	top_down = true,
 })
 require("noice").setup({
 	views = {
@@ -501,7 +501,7 @@ dashboard.section.header.val = {
 dashboard.section.buttons.val = {
 	dashboard.button("<ctrl>n", "🌿 > open tree", toggle_nvim_tree),
 	dashboard.button("<space>fa", "🔎 > find file", builtin.find_files),
-	dashboard.button("r", "🗃️ > recent", ":Telescope oldfiles<CR>"),
+	dashboard.button("fr", "🗃️ > recent", ":Telescope oldfiles<CR>"),
 	dashboard.button("<space>th", "📜 > cheatsheet", show_cheatsheet),
 	dashboard.button("q", "❌ > quit nvim", ":qa<CR>"),
 }
@@ -518,15 +518,15 @@ function show_cheatsheet()
 	local event = require("nui.utils.autocmd").event
 
 	cheatsheet_window = Popup({
-		enter = false,
+		enter = true,
 		focusable = false,
 		border = {
 			style = "rounded",
 		},
 		position = "50%",
 		size = {
-			width = "80%",
-			height = "60%",
+			width = "50%",
+			height = "70%",
 		},
 	})
 
