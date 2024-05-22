@@ -214,6 +214,9 @@ vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
 vim.keymap.set("n", "<leader>fz", builtin.current_buffer_fuzzy_find, {})
 vim.keymap.set("n", "<leader>fh", builtin.help_tags, {})
 require("telescope").setup({
+    defaults = {
+        path_display = { truncate = 1 },
+    },
 	extensions = {
 		["ui-select"] = {
 			require("telescope.themes").get_dropdown({}),
