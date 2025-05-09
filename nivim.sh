@@ -66,7 +66,6 @@ if [ $? -ne 0 ]; then
 	echo "alias nivim=nvim" >> $rc_file
 fi
 
-pip freeze | grep pyright== &> /dev/null || pip install pyright
-pip freeze | grep black== &> /dev/null || pip install black
+pip freeze | grep basedpyright== &> /dev/null || pip install basedpyright
 
 echo done
