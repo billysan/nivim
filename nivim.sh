@@ -22,19 +22,17 @@ fi
 
 echo starting...
 
-dest_dir=$HOME/.local/bin
+dest_dir=~/.local/bin
 
-mkdir -p $HOME/.config/nvim
-cp init.lua $HOME/.config/nvim
-cp cheatsheet.md $HOME/.config/nvim
+mkdir -p ~/.config/nvim
+cp init.lua ~/.config/nvim
+cp cheatsheet.md ~/.config/nvim
 
 chmod u+x lazygit
-chmod u+x lazydocker
 chmod u+x nvim.appimage
 
 mkdir -p $dest_dir
 cp lazygit $dest_dir
-cp lazydocker $dest_dir
 
 if [ ! -d "$dest_dir/squashfs-root" ]; then
 	echo extracting squashfs...

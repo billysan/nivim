@@ -7,6 +7,11 @@ vim.g.maplocalleader = " "
 
 -- Enable Nerd Font support
 vim.g.have_nerd_font = true
+vim.opt.termguicolors = true
+
+-- NvimTree asked for this
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 -- Set various options using vim.opt
 vim.opt.number = true
@@ -97,20 +102,9 @@ local plugins = {
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
-	{
-		"williamboman/mason.nvim",
-		"williamboman/mason-lspconfig.nvim",
-		"neovim/nvim-lspconfig",
-	},
 	{ "nvim-telescope/telescope-ui-select.nvim" },
 	{ "romgrk/barbar.nvim" },
 	{ "Shatur/neovim-ayu" },
-	{ "hrsh7th/nvim-cmp" },
-	{ "L3MON4D3/LuaSnip" },
-	{ "saadparwaiz1/cmp_luasnip" },
-	{ "rafamadriz/friendly-snippets" },
-	{ "hrsh7th/cmp-nvim-lsp" },
-	{ "hrsh7th/cmp-path" },
 	{
 		"kdheepak/lazygit.nvim",
 		lazy = false,
@@ -152,15 +146,6 @@ local plugins = {
 			require("alpha").setup(require("alpha.themes.dashboard").config)
 		end,
 	},
-	{ "stevearc/conform.nvim" },
-	{ "zapling/mason-conform.nvim" },
-	{
-		"dpayne/CodeGPT.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"MunifTanjim/nui.nvim",
-		},
-	},
 	{
 		"nvim-telescope/telescope-fzf-native.nvim",
 		build = "make",
@@ -169,6 +154,50 @@ local plugins = {
 
 local opts = {}
 require("lazy").setup(plugins, opts)
+
+
+---
+--- lsp
+---
+vim.lsp.config.basedpyright = {
+  name = "basedpyright",
+  filetypes = { "python" },
+  cmd = { "basedpyright-langserver", "--stdio" },
+  settings = {
+    basedpyright = {
+      disableOrganizeImports = true,
+      analysis = {
+        autoSearchPaths = true,
+        autoImportCompletions = true,
+        useLibraryCodeForTypes = true,
+        diagnosticMode = "openFilesOnly",
+        inlayHints = {
+          variableTypes = true,
+          callArgumentNames = true,
+          functionReturnTypes = true,
+          genericTypes = true,
+        },
+      },
+    },
+  },
+}
+vim.lsp.enable({'basedpyright'})
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client:supports_method('textDocument/completion') then
+      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+    end
+  end,
+})
+vim.cmd("set completeopt+=noselect")
+vim.diagnostic.config({ virtual_text = true })
+vim.api.nvim_set_keymap("n", "gd", '<cmd>lua require("telescope.builtin").lsp_definitions()<CR>', local_keymap_options)
+vim.api.nvim_set_keymap("n", "gr", '<cmd>lua require("telescope.builtin").lsp_references()<CR>', local_keymap_options)
+vim.keymap.set("n", "<leader>ra", vim.lsp.buf.rename, {})
+vim.o.winborder = 'rounded'
+
 
 ---
 --- ayu
@@ -204,6 +233,7 @@ require("ayu").setup({
 })
 vim.cmd("colorscheme ayu-dark")
 
+
 ---
 --- Telescope
 ---
@@ -212,7 +242,6 @@ vim.keymap.set("n", "<leader>fa", builtin.find_files, {})
 vim.keymap.set("n", "<leader>fw", builtin.live_grep, {})
 vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
 vim.keymap.set("n", "<leader>fz", builtin.current_buffer_fuzzy_find, {})
-vim.keymap.set("n", "<leader>fh", builtin.help_tags, {})
 require("telescope").setup({
     defaults = {
         path_display = { truncate = 1 },
@@ -226,6 +255,7 @@ require("telescope").setup({
 require("telescope").load_extension("ui-select")
 require("telescope").load_extension("fzf")
 vim.keymap.set("n", "<leader>fr", ":Telescope oldfiles<CR>", {})
+
 
 ---
 --- nvim-tree
@@ -256,6 +286,7 @@ vim.keymap.set("n", "<C-n>", ":NvimTreeToggle<CR>", local_keymap_options)
 vim.keymap.set("n", "<leader>e", toggle_nvim_tree, local_keymap_options)
 vim.keymap.set("n", "<leader>tk", ":NvimTreeCollapse<CR>", local_keymap_options)
 
+
 ---
 -- Treesitter
 --
@@ -266,52 +297,14 @@ config.setup({
 	indent = { enable = true },
 })
 
+
 ---
 --- lualine
 ---
 require("lualine").setup({
-	sections = {
-		lualine_c = {
-			"lsp_progress",
-		},
-	},
+	extensions = {'nvim-tree'},
 })
 
---
--- Mason, mason-lspconfig, lspconfig
---
-require("mason").setup()
-require("mason-lspconfig").setup({
-	ensure_installed = { "lua_ls", "pyright" },
-})
-
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
-
-require("lspconfig").lua_ls.setup({ capabilities = capabilities })
-require("lspconfig").pyright.setup({ capabilities = capabilities })
-vim.api.nvim_set_keymap("n", "gd", '<cmd>lua require("telescope.builtin").lsp_definitions()<CR>', local_keymap_options)
-vim.api.nvim_set_keymap("n", "gr", '<cmd>lua require("telescope.builtin").lsp_references()<CR>', local_keymap_options)
-vim.api.nvim_set_keymap(
-	"n",
-	"<leader>lz",
-	'<cmd>lua require("telescope.builtin").lsp_document_symbols()<CR>',
-	local_keymap_options
-)
-vim.api.nvim_set_keymap(
-	"n",
-	"<leader>la",
-	'<cmd>lua require("telescope.builtin").lsp_dynamic_workspace_symbols()<CR>',
-	local_keymap_options
-)
-vim.keymap.set("n", "<leader>K", vim.lsp.buf.hover, {})
-vim.keymap.set("n", "<leader>ra", vim.lsp.buf.rename, {})
-vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, {})
-vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, {})
-vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
-vim.keymap.set("n", "<leader>wl", function()
-	print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-end, {})
 
 ---
 --- barbar
@@ -348,35 +341,6 @@ vim.keymap.set("n", "<leader>x", confirm_buffer_changes)
 vim.api.nvim_set_keymap("n", "<C-Right>", ":BufferNext<CR>", local_keymap_options)
 vim.api.nvim_set_keymap("n", "<C-Left>", ":BufferPrevious<CR>", local_keymap_options)
 
----
---- nvim-cmp
----
-local cmp = require("cmp")
-require("luasnip.loaders.from_vscode").lazy_load()
-cmp.setup({
-	snippet = {
-		expand = function(args)
-			require("luasnip").lsp_expand(args.body)
-		end,
-	},
-	window = {
-		completion = cmp.config.window.bordered(),
-		documentation = cmp.config.window.bordered(),
-	},
-	mapping = cmp.mapping.preset.insert({
-		["<C-b>"] = cmp.mapping.scroll_docs(-4),
-		["<C-f>"] = cmp.mapping.scroll_docs(4),
-		["<C-Space>"] = cmp.mapping.complete(),
-		["<C-e>"] = cmp.mapping.abort(),
-		["<CR>"] = cmp.mapping.confirm({ select = true }),
-	}),
-	sources = cmp.config.sources({
-		{ name = "nvim_lsp" },
-		{ name = "path" },
-	}, {
-		{ name = "buffer" },
-	}),
-})
 
 ---
 --- lazygit
@@ -388,18 +352,6 @@ vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", local_keymap_options)
 --- floaterm
 ---
 vim.keymap.set("n", "<A-i>", ":FloatermToggle<CR>", local_keymap_options)
-
----
---- lazydocker
----
-require("lazydocker").setup({})
-
-function open_lazydocker()
-	move_right_if_in_tree()
-	vim.cmd("LazyDocker")
-end
-
-vim.keymap.set("n", "<leader>dk", open_lazydocker, local_keymap_options)
 
 ---
 --- noice, notify
@@ -555,63 +507,4 @@ function close_cheatsheet()
 end
 vim.keymap.set("n", "<leader>th", show_cheatsheet, {})
 
----
---- conform
----
-local conform = require("conform")
-conform.setup({
-	formatters_by_ft = {
-		lua = { "stylua" },
-		python = { "black" },
-		json = { "prettier" },
-		html = { "prettier" },
-		javascript = { "prettier" },
-	},
-})
 
-require("mason-conform").setup({})
-
--- Function to format a buffer
-function format_buffer()
-	move_right_if_in_tree()
-	-- Call the 'conform.format' function with specific options
-	conform.format({
-		lsp_failback = true,
-		async = true,
-		timeout_ms = 1000,
-	})
-end
-
-vim.keymap.set("n", "<leader>fo", format_buffer, local_keymap_options)
-
----
---- codegpt
----
-vim.g["codegpt_commands_defaults"] = {
-	["chat"] = {
-		model = "gpt-4",
-		system_message_template = "You are a general assistant to a software developer.",
-		user_message_template = "{{command_args}}",
-		callback_type = "code_popup",
-	},
-	["code_edit"] = {
-		model = "gpt-4",
-		user_message_template = "I have the following {{language}} code: ```{{filetype}}\n{{text_selection}}```\n{{command_args}}. {{language_instructions}} Only return the code snippet and nothing else.",
-		callback_type = "code_popup",
-	},
-}
-
-function codegpt_question()
-	move_right_if_in_tree()
-	local question = vim.fn.input("Ask GPT: ")
-	vim.api.nvim_command("Chat chat " .. question)
-end
-
-function codegpt_instruct_edit()
-	move_right_if_in_tree()
-	local instruction = vim.fn.input("Instruct GPT: ")
-	vim.api.nvim_command("Chat code_edit " .. instruction)
-end
-
-vim.keymap.set("n", "<leader>tq", codegpt_question, local_keymap_options)
-vim.keymap.set("v", "<leader>ti", codegpt_instruct_edit, local_keymap_options)
