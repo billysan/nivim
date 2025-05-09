@@ -22,23 +22,12 @@ fi
 
 echo starting...
 
-dest_dir=~/.local/bin
-
 mkdir -p ~/.config/nvim
 cp init.lua ~/.config/nvim
 cp cheatsheet.md ~/.config/nvim
 
 chmod u+x lazygit
-chmod u+x nvim.appimage
-
-mkdir -p $dest_dir
-cp lazygit $dest_dir
-
-if [ ! -d "$dest_dir/squashfs-root" ]; then
-	echo extracting squashfs...
-	./nvim.appimage --appimage-extract &>/dev/null
-	mv squashfs-root $dest_dir
-fi
+chmod u+x nvim
 
 # check if the shell is zsh or bash
 if [ $SHELL = "/bin/zsh" ]
@@ -48,21 +37,15 @@ else
     rc_file=~/.bashrc
 fi
 
-grep -i $dest_dir $rc_file &>/dev/null
+grep -i $PWD $rc_file &>/dev/null
 if [ $? -ne 0 ]; then
-	echo adding $dest_dir to .bashrc...
-	echo "export PATH=\$PATH:$dest_dir" >> $rc_file
-fi
-
-grep -i $dest_dir/squashfs-root/usr/bin $rc_file &>/dev/null
-if [ $? -ne 0 ]; then
-	echo adding squashfs to .bashrc...
-	echo "export PATH=\$PATH:$dest_dir/squashfs-root/usr/bin" >> $rc_file
+	echo adding $PWD to .bashrc/.zshhrc file...
+	echo "export PATH=\$PATH:$PWD" >> $rc_file
 fi
 
 grep nivim $rc_file &>/dev/null
 if [ $? -ne 0 ]; then
-	echo adding nivim alias to .bashrc...
+	echo adding nivim alias to .bashrc/.zshrc...
 	echo "alias nivim=nvim" >> $rc_file
 fi
 
