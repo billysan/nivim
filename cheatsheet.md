@@ -30,12 +30,8 @@
    gr ............ 📜 show references
    ra ............ 🖋️ rename code
    gb ............ 👀 toggle git blame
-   <leader> fo ... 💅 format code
 
-💤 lazies
+💤 lazygit
    <space> gg .... 🎋 git
-   <space> dk .... 🐳 lazydocker
 
-🤖 gpt
-   <leader> tq .. 💭 ask a question
-   <leader> ti .. ✏️ instruct on selection 
+

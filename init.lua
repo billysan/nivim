@@ -119,14 +119,6 @@ local plugins = {
 			"nvim-lua/plenary.nvim",
 		},
 	},
-	{ "voldikss/vim-floaterm" },
-	{
-		"crnvl96/lazydocker.nvim",
-		event = "VeryLazy",
-		dependencies = {
-			"MunifTanjim/nui.nvim",
-		},
-	},
 	{
 		"folke/noice.nvim",
 		event = "VeryLazy",
@@ -134,10 +126,6 @@ local plugins = {
 			"MunifTanjim/nui.nvim",
 			"rcarriga/nvim-notify",
 		},
-	},
-	{
-		"folke/todo-comments.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
 	},
 	{ "tpope/vim-fugitive" },
 	{
@@ -150,6 +138,15 @@ local plugins = {
 		"nvim-telescope/telescope-fzf-native.nvim",
 		build = "make",
 	},
+    {
+        "rachartier/tiny-inline-diagnostic.nvim",
+        event = "VeryLazy", -- Or `LspAttach`
+        priority = 1000, -- needs to be loaded in first
+        config = function()
+            require('tiny-inline-diagnostic').setup()
+            vim.diagnostic.config({ virtual_text = false }) -- Only if needed in your configuration, if you already have native LSP diagnostics
+        end
+    }
 }
 
 local opts = {}
@@ -193,7 +190,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 vim.cmd("set completeopt+=noselect")
-vim.diagnostic.config({ virtual_text = true })
+-- Currently done by diagnostics plugin
+-- vim.diagnostic.config({ virtual_text = true })
 vim.api.nvim_set_keymap("n", "gd", '<cmd>lua require("telescope.builtin").lsp_definitions()<CR>', local_keymap_options)
 vim.api.nvim_set_keymap("n", "gr", '<cmd>lua require("telescope.builtin").lsp_references()<CR>', local_keymap_options)
 vim.keymap.set("n", "<leader>ra", vim.lsp.buf.rename, {})
@@ -349,10 +347,6 @@ vim.api.nvim_set_keymap("n", "<C-Left>", ":BufferPrevious<CR>", local_keymap_opt
 require("lazy").setup({})
 vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", local_keymap_options)
 
----
---- floaterm
----
-vim.keymap.set("n", "<A-i>", ":FloatermToggle<CR>", local_keymap_options)
 
 ---
 --- noice, notify
@@ -402,17 +396,6 @@ require("noice").setup({
 	},
 })
 
----
---- todo-comments
----
-require("todo-comments").setup({
-	highlight = {
-		pattern = [[.*<(KEYWORDS)\s*]],
-	},
-	search = {
-		pattern = [[\b(KEYWORDS)]],
-	},
-})
 
 ---
 --- fugitive
