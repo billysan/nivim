@@ -163,6 +163,7 @@ vim.lsp.config.basedpyright = {
   name = "basedpyright",
   filetypes = { "python" },
   cmd = { "basedpyright-langserver", "--stdio" },
+  root_markers = { '.git' },
   settings = {
     basedpyright = {
       disableOrganizeImports = true,
