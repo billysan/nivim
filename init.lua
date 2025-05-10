@@ -119,14 +119,6 @@ local plugins = {
 			"nvim-lua/plenary.nvim",
 		},
 	},
-	{
-		"folke/noice.nvim",
-		event = "VeryLazy",
-		dependencies = {
-			"MunifTanjim/nui.nvim",
-			"rcarriga/nvim-notify",
-		},
-	},
 	{ "tpope/vim-fugitive" },
 	{
 		"goolord/alpha-nvim",
@@ -349,55 +341,6 @@ vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", local_keymap_options)
 
 
 ---
---- noice, notify
----
-require("notify").setup({
-	background_colour = "#000000",
-	render = "wrapped-compact",
-	stages = "static",
-	top_down = true,
-})
-require("noice").setup({
-	views = {
-		cmdline_popup = {
-			position = {
-				row = "40%",
-				col = "50%",
-			},
-		},
-		popupmenu = {
-			relative = "editor",
-			position = {
-				row = "10%",
-				col = "50%",
-			},
-			size = {
-				width = 60,
-				height = 10,
-			},
-			border = {
-				style = "rounded",
-				padding = { 0, 1 },
-			},
-			win_options = {
-				winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
-			},
-		},
-	},
-	lsp = {
-		override = {
-			["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-			["vim.lsp.util.stylize_markdown"] = true,
-			["cmp.entry.get_documentation"] = true,
-		},
-	},
-	presets = {
-		command_palette = true,
-	},
-})
-
-
----
 --- fugitive
 ---
 -- Function to toggle Git blame view in Neovim
@@ -440,55 +383,6 @@ dashboard.section.header.val = {
 dashboard.section.buttons.val = {
 	dashboard.button("<ctrl>n", "🌿 > open tree", toggle_nvim_tree),
 	dashboard.button("<space>fa", "🔎 > find file", builtin.find_files),
-	dashboard.button("fr", "🗃️ > recent", ":Telescope oldfiles<CR>"),
-	dashboard.button("<space>th", "📜 > cheatsheet", show_cheatsheet),
+	dashboard.button("<space>fr", "🗃️ > recent", ":Telescope oldfiles<CR>"),
 	dashboard.button("q", "❌ > quit nvim", ":qa<CR>"),
 }
-
----
---- cheatsheet
----
-local cheatsheet_window = nil
-
-function show_cheatsheet()
-	move_right_if_in_tree()
-
-	local Popup = require("nui.popup")
-	local event = require("nui.utils.autocmd").event
-
-	cheatsheet_window = Popup({
-		enter = true,
-		focusable = false,
-		border = {
-			style = "rounded",
-		},
-		position = "50%",
-		size = {
-			width = "50%",
-			height = "70%",
-		},
-	})
-
-	-- mount/open the component
-	cheatsheet_window:mount()
-	is_cheatsheet_open = true
-
-	-- unmount component when cursor leaves buffer
-	cheatsheet_window:on(event.BufLeave, function()
-		cheatsheet_window:unmount()
-	end)
-	local cheatsheet_path = vim.fn.stdpath("config") .. "/cheatsheet.md"
-	local file_contents = vim.fn.readfile(cheatsheet_path)
-	-- set content
-	vim.api.nvim_buf_set_lines(cheatsheet_window.bufnr, 0, 1, false, file_contents)
-	return cheatsheet_window
-end
-
--- Function to close the cheatsheet window
-function close_cheatsheet()
-	cheatsheet_window:unmount() -- Unmount the cheatsheet window
-	is_cheatsheet_open = false -- Update the flag to indicate cheatsheet is closed
-end
-vim.keymap.set("n", "<leader>th", show_cheatsheet, {})
-
-
