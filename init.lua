@@ -138,6 +138,18 @@ local plugins = {
             require('tiny-inline-diagnostic').setup()
             vim.diagnostic.config({ virtual_text = false }) -- Only if needed in your configuration, if you already have native LSP diagnostics
         end
+    },
+    {
+      'saghen/blink.cmp',
+      version = '1.*',
+      opts = {
+        keymap = { preset = 'enter' },
+
+        appearance = {
+          nerd_font_variant = 'mono'
+        },
+      },
+      opts_extend = { "sources.default" }
     }
 }
 
