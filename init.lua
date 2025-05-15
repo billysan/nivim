@@ -138,11 +138,13 @@ local plugins = {
             require('tiny-inline-diagnostic').setup()
             vim.diagnostic.config({ virtual_text = false }) -- Only if needed in your configuration, if you already have native LSP diagnostics
         end
+    },
+    {
+        'saghen/blink.cmp'
     }
 }
 
-local opts = {}
-require("lazy").setup(plugins, opts)
+require("lazy").setup(plugins, {})
 
 
 ---
@@ -386,3 +388,18 @@ dashboard.section.buttons.val = {
 	dashboard.button("<space>fr", "🗃️ > recent", ":Telescope oldfiles<CR>"),
 	dashboard.button("q", "❌ > quit nvim", ":qa<CR>"),
 }
+
+
+---
+--- blink
+---
+vim.lsp.config('*', { capabilities = require('blink.cmp').get_lsp_capabilities(nil, true) })
+require('blink.cmp').setup({
+    keymap = { preset = 'enter' },
+    completion = {
+        documentation = {
+            auto_show = true,
+        }
+    },
+    signature = { enabled = true },
+})
