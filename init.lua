@@ -206,6 +206,8 @@ require("ayu").setup({
 		CursorColumn = { bg = "None" },
 		WhichKeyFloat = { bg = "None" },
 		VertSplit = { bg = "None" },
+		DiagnosticError = { bg = "#c10000" },
+		-- DiagnosticWarn = { bg = "#5c4500"},
 		Comment = {
 			fg = "#10FF00",
 			italic = true,
@@ -403,3 +405,12 @@ require('blink.cmp').setup({
     },
     signature = { enabled = true },
 })
+
+
+ require('tiny-inline-diagnostic').setup({
+	 multilines = {
+		nabled = false,
+		always_show = false
+	}
+ })
+
