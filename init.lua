@@ -140,7 +140,8 @@ local plugins = {
         end
     },
     {
-        'saghen/blink.cmp'
+        'saghen/blink.cmp',
+        version = '1.*',
     }
 }
 
@@ -175,17 +176,18 @@ vim.lsp.config.basedpyright = {
 }
 vim.lsp.enable({'basedpyright'})
 
-vim.api.nvim_create_autocmd('LspAttach', {
-  callback = function(ev)
-    local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    if client:supports_method('textDocument/completion') then
-      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-    end
-  end,
-})
-vim.cmd("set completeopt+=noselect")
+--vim.api.nvim_create_autocmd('LspAttach', {
+--  callback = function(ev)
+--    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    --if client:supports_method('textDocument/completion') then
+    --  vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+    --end
+--  end,
+--})
+--vim.cmd("set completeopt+=noselect")
 -- Currently done by diagnostics plugin
 -- vim.diagnostic.config({ virtual_text = true })
+
 vim.api.nvim_set_keymap("n", "gd", '<cmd>lua require("telescope.builtin").lsp_definitions()<CR>', local_keymap_options)
 vim.api.nvim_set_keymap("n", "gr", '<cmd>lua require("telescope.builtin").lsp_references()<CR>', local_keymap_options)
 vim.keymap.set("n", "<leader>ra", vim.lsp.buf.rename, {})
@@ -224,6 +226,8 @@ require("ayu").setup({
 		Operator = {
 			fg = "purple",
 		},
+        -- blink
+        BlinkCmpMenu = { bg = "#1F2430", fg = "orange" },
 	},
 })
 vim.cmd("colorscheme ayu-dark")
@@ -399,17 +403,23 @@ vim.lsp.config('*', { capabilities = require('blink.cmp').get_lsp_capabilities(n
 require('blink.cmp').setup({
     keymap = { preset = 'enter' },
     completion = {
+        menu = {
+            min_width = 20,
+            max_height = 30,
+        },
         documentation = {
             auto_show = true,
+            auto_show_delay_ms = 0
         }
     },
     signature = { enabled = true },
+
 })
 
 
  require('tiny-inline-diagnostic').setup({
 	 multilines = {
-		nabled = false,
+		enabled = false,
 		always_show = false
 	}
  })
