@@ -140,21 +140,12 @@ local plugins = {
         end
     },
     {
-      'saghen/blink.cmp',
-      version = '1.*',
-      opts = {
-        keymap = { preset = 'enter' },
-
-        appearance = {
-          nerd_font_variant = 'mono'
-        },
-      },
-      opts_extend = { "sources.default" }
-    }
+        'saghen/blink.cmp',
+        version = '1.*',
+    },
 }
 
-local opts = {}
-require("lazy").setup(plugins, opts)
+require("lazy").setup(plugins, {})
 
 
 ---
@@ -185,17 +176,18 @@ vim.lsp.config.basedpyright = {
 }
 vim.lsp.enable({'basedpyright'})
 
-vim.api.nvim_create_autocmd('LspAttach', {
-  callback = function(ev)
-    local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    if client:supports_method('textDocument/completion') then
-      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-    end
-  end,
-})
-vim.cmd("set completeopt+=noselect")
+--vim.api.nvim_create_autocmd('LspAttach', {
+--  callback = function(ev)
+--    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    --if client:supports_method('textDocument/completion') then
+    --  vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+    --end
+--  end,
+--})
+--vim.cmd("set completeopt+=noselect")
 -- Currently done by diagnostics plugin
 -- vim.diagnostic.config({ virtual_text = true })
+
 vim.api.nvim_set_keymap("n", "gd", '<cmd>lua require("telescope.builtin").lsp_definitions()<CR>', local_keymap_options)
 vim.api.nvim_set_keymap("n", "gr", '<cmd>lua require("telescope.builtin").lsp_references()<CR>', local_keymap_options)
 vim.keymap.set("n", "<leader>ra", vim.lsp.buf.rename, {})
@@ -232,10 +224,27 @@ require("ayu").setup({
 		Operator = {
 			fg = "purple",
 		},
+        BlinkCmpMenu = { bg = "#1F2430", fg = "orange" },
+        NvimTreeCursorColumn = { fg = "purple" },
+        NvimTreeCursorColumn = { fg = "green" },
 	},
 })
 vim.cmd("colorscheme ayu-dark")
 
+vim.diagnostic.config({
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = '❌',
+            [vim.diagnostic.severity.WARN] = '⚠️',
+        },
+        linehl = {
+            [vim.diagnostic.severity.ERROR] = 'ErrorMsg',
+        },
+        numhl = {
+            [vim.diagnostic.severity.WARN] = 'WarningMsg',
+        },
+    },
+})
 
 ---
 --- Telescope
@@ -398,3 +407,33 @@ dashboard.section.buttons.val = {
 	dashboard.button("<space>fr", "🗃️ > recent", ":Telescope oldfiles<CR>"),
 	dashboard.button("q", "❌ > quit nvim", ":qa<CR>"),
 }
+
+
+---
+--- blink
+---
+vim.lsp.config('*', { capabilities = require('blink.cmp').get_lsp_capabilities(nil, true) })
+require('blink.cmp').setup({
+    keymap = { preset = 'enter' },
+    completion = {
+        menu = {
+            min_width = 20,
+            max_height = 30,
+        },
+        documentation = {
+            auto_show = true,
+            auto_show_delay_ms = 0
+        }
+    },
+    signature = { enabled = true },
+
+})
+
+
+ require('tiny-inline-diagnostic').setup({
+	 multilines = {
+		enabled = false,
+		always_show = false
+	}
+ })
+
