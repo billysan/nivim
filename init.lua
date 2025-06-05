@@ -142,7 +142,7 @@ local plugins = {
     {
         'saghen/blink.cmp',
         version = '1.*',
-    }
+    },
 }
 
 require("lazy").setup(plugins, {})
@@ -208,8 +208,6 @@ require("ayu").setup({
 		CursorColumn = { bg = "None" },
 		WhichKeyFloat = { bg = "None" },
 		VertSplit = { bg = "None" },
-		DiagnosticError = { bg = "#c10000" },
-		-- DiagnosticWarn = { bg = "#5c4500"},
 		Comment = {
 			fg = "#10FF00",
 			italic = true,
@@ -226,12 +224,27 @@ require("ayu").setup({
 		Operator = {
 			fg = "purple",
 		},
-        -- blink
         BlinkCmpMenu = { bg = "#1F2430", fg = "orange" },
+        NvimTreeCursorColumn = { fg = "purple" },
+        NvimTreeCursorColumn = { fg = "green" },
 	},
 })
 vim.cmd("colorscheme ayu-dark")
 
+vim.diagnostic.config({
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = '❌',
+            [vim.diagnostic.severity.WARN] = '⚠️',
+        },
+        linehl = {
+            [vim.diagnostic.severity.ERROR] = 'ErrorMsg',
+        },
+        numhl = {
+            [vim.diagnostic.severity.WARN] = 'WarningMsg',
+        },
+    },
+})
 
 ---
 --- Telescope
