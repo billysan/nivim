@@ -28,9 +28,9 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 vim.opt.confirm = true
+vim.opt.winborder = 'rounded'
 
 local local_keymap_options = { noremap = true, silent = true }
-local is_cheatsheet_open = false
 
 function move_right_if_in_tree()
 	-- Check if the current buffer name contains "NvimTree"
@@ -42,11 +42,6 @@ end
 
 -- Define the function to handle ESC key mapping
 function esc_keymap()
-	-- Check if cheatsheet is open, if so close it
-	if is_cheatsheet_open == true then
-		close_cheatsheet()
-		return
-	end
 
 	-- Check if the current buffer is a fugitiveblame buffer, if so close it with :q
 	if string.find(vim.api.nvim_buf_get_name(0), "fugitiveblame") then
@@ -191,23 +186,9 @@ vim.lsp.config.basedpyright = {
   },
 }
 vim.lsp.enable({'basedpyright'})
-
---vim.api.nvim_create_autocmd('LspAttach', {
---  callback = function(ev)
---    local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    --if client:supports_method('textDocument/completion') then
-    --  vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-    --end
---  end,
---})
---vim.cmd("set completeopt+=noselect")
--- Currently done by diagnostics plugin
--- vim.diagnostic.config({ virtual_text = true })
-
 vim.api.nvim_set_keymap("n", "gd", '<cmd>lua require("telescope.builtin").lsp_definitions()<CR>', local_keymap_options)
 vim.api.nvim_set_keymap("n", "gr", '<cmd>lua require("telescope.builtin").lsp_references()<CR>', local_keymap_options)
 vim.keymap.set("n", "<leader>ra", vim.lsp.buf.rename, {})
-vim.o.winborder = 'rounded'
 
 
 ---
@@ -400,13 +381,23 @@ local dashboard = require("alpha.themes.dashboard")
 
 dashboard.section.header.val = {
 	"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+	"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+	"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+	"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+	"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+	"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+	"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+	"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+	"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+	"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+	"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 	"⠀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠀⠀",
 	"⠀⢰⣿⣿⣿⣆⢀⣶⣶⣄⠀⢀⣤⡀⠀⠀⢀⣤⡀⠀⣠⣶⣶⡀⣰⣿⣿⣿⡆⠀",
 	"⠀⢸⣿⣿⣿⡟⠀⣿⣿⡿⠀⢸⣿⣿⠆⠰⣿⣿⡇⠀⢿⣿⣿⠀⢻⣿⣿⣿⡇⠀",
 	"⠀⢸⣿⣿⣿⡇⠀⠘⠛⠀⠀⠈⠿⠋⠀⠀⠙⠿⠁⠀⠀⠛⠃⠀⢸⣿⣿⣿⡇⠀",
 	"⠀⠘⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⣿⠃⠀",
 	"⠀⠀⢻⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀    ⠀ ⠀⠀⠀⠀⠀⠀⣿⣿⡟⠀⠀",
-	"⠀⠀⠈⣿⣿⠀⠀⠀⠀  ⠀⠀nivim⠀⠀⠀⠀⠀⠀⠀⣿⣿⠁⠀⠀",
+	"⠀⠀⠈⣿⣿⠀⠀⠀⠀  ⠀⠀     ⠀⠀⠀⠀⠀⠀⠀⣿⣿⠁⠀⠀",
 	"⠀⠀⠀⠸⣿⡄⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⢠⣿⠇⠀⠀⠀",
 	"⠀⠀⠀⠀⢻⡇⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡀⠀⢸⡟⠀⠀⠀⠀",
 	"⠀⠀⠀⠀⠀⠃⠀⢸⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⡇⠀⠘⠀⠀⠀⠀⠀",
@@ -415,14 +406,7 @@ dashboard.section.header.val = {
 	"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠁⠀⠀⠈⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 	"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 }
-
-dashboard.section.buttons.val = {
-	dashboard.button("<ctrl>n", "🌿 > open tree", toggle_nvim_tree),
-	dashboard.button("<space>fa", "🔎 > find file", builtin.find_files),
-	dashboard.button("<space>fr", "🗃️ > recent", ":Telescope oldfiles<CR>"),
-	dashboard.button("q", "❌ > quit nvim", ":qa<CR>"),
-}
-
+dashboard.section.buttons.val = { }
 
 ---
 --- blink

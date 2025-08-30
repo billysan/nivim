@@ -3,9 +3,6 @@
 🦷                                              🦷
 🦷                 cheatsheet                   🦷
 🦷                                              🦷
-🦷             🔃 scroll for more               🦷
-🦷             ❌ close with <esc>              🦷
-🦷                                              🦷
 🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷🦷
 
 🌲 tree view
@@ -33,5 +30,3 @@
 
 💤 lazygit
    <space> gg .... 🎋 git
-
-
