@@ -143,6 +143,22 @@ local plugins = {
         'saghen/blink.cmp',
         version = '1.*',
     },
+    {
+        "romus204/referencer.nvim",
+        config = function()
+            require("referencer").setup({
+                enable = true, 
+                format = "   %d", 
+                show_no_reference = true, 
+                kinds = { 12, 6, 5, 23, 8 }, 
+                hl_group = "Comment", 
+                color = "#10FF00", 
+                virt_text_pos = "eol",
+                pattern = {"*.py"}, 
+                lsp_servers = {'basedpyright'}
+            })
+        end
+    }
 }
 
 require("lazy").setup(plugins, {})
@@ -225,8 +241,7 @@ require("ayu").setup({
 			fg = "purple",
 		},
         BlinkCmpMenu = { bg = "#1F2430", fg = "orange" },
-        NvimTreeCursorColumn = { fg = "purple" },
-        NvimTreeCursorColumn = { fg = "green" },
+        NvimTreeCursorLine = { fg = "orange" },
 	},
 })
 vim.cmd("colorscheme ayu-dark")
@@ -304,7 +319,7 @@ vim.keymap.set("n", "<leader>tk", ":NvimTreeCollapse<CR>", local_keymap_options)
 --
 local config = require("nvim-treesitter.configs")
 config.setup({
-	ensure_installed = { "python", "lua", "bash", "c", "html", "lua", "markdown", "vim", "vimdoc", "javascript", "css" },
+	ensure_installed = { "python", "lua", "bash", "c", "html", "lua", "markdown", "vim", "vimdoc", "javascript", "css", "yaml" },
 	highlight = { enable = true },
 	indent = { enable = true },
 })
@@ -391,7 +406,7 @@ dashboard.section.header.val = {
 	"⠀⢸⣿⣿⣿⡇⠀⠘⠛⠀⠀⠈⠿⠋⠀⠀⠙⠿⠁⠀⠀⠛⠃⠀⢸⣿⣿⣿⡇⠀",
 	"⠀⠘⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⣿⠃⠀",
 	"⠀⠀⢻⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀    ⠀ ⠀⠀⠀⠀⠀⠀⣿⣿⡟⠀⠀",
-	"⠀⠀⠈⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠁⠀⠀",
+	"⠀⠀⠈⣿⣿⠀⠀⠀⠀  ⠀⠀ניבים⠀⠀⠀⠀⠀⠀⠀⣿⣿⠁⠀⠀",
 	"⠀⠀⠀⠸⣿⡄⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⢠⣿⠇⠀⠀⠀",
 	"⠀⠀⠀⠀⢻⡇⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡀⠀⢸⡟⠀⠀⠀⠀",
 	"⠀⠀⠀⠀⠀⠃⠀⢸⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⡇⠀⠘⠀⠀⠀⠀⠀",
@@ -426,14 +441,15 @@ require('blink.cmp').setup({
         }
     },
     signature = { enabled = true },
-
 })
 
 
+---
+--- tiny inline diagnostic
+---
  require('tiny-inline-diagnostic').setup({
 	 multilines = {
 		enabled = false,
 		always_show = false
 	}
  })
-
